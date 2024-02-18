@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+import re
 
 class Playlist(object):
     playlists = []
@@ -116,12 +117,12 @@ class Arcade(Playlist):
                     # Extraer la subcadena desde " hasta .
                     file = cadena[inicio + 1:fin]
 
-                    print('found: ' + file)  # Salida: "Aladdin (Japan).zip"
+                    # print('found: ' + file)  # Salida: "Aladdin (Japan).zip"
                     # print(file)
                     if file in self.files and file not in bios:
                         files_found.append(file)
-                        description = lines[lines.index(line) - 3][7:-2]
-                        description = description.replace('_', '&').replace('&amp;', '&')
+                        description = re.findall(r'"([^"]*)"', lines[lines.index(line)])[0].replace('.zip', '')
+                        print(description)
                         item = {
                             'path': os.path.join(self.source, file),
                             'label': description,
