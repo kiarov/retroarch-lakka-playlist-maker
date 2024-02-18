@@ -133,8 +133,7 @@ class Arcade(Playlist):
                         files.append(item)
         missing_files = list(filter(lambda x: x not in files_found, self.files))
         if missing_files:
-            print('Ups')
-            # print('[-{}] {} | Not found in .dat: {}'.format(len(missing_files), self.name, missing_files))
+             print('[-{}] {} | Not found in .dat: {}'.format(len(missing_files), self.name, missing_files))
         return files
 
 def create_everything():

@@ -1,51 +1,59 @@
+
 # RetroArch/Lakka playlists in 1-click! 👾
-
-RetroArch's built-in scanner *used to** be slow and skip some of my ROMs/ISOs.\
-This script scans ROMs/Discs in given directory, and creates a playlist file which can be saved locally or over the network on a Lakka installation on a Raspberry Pi for example.
-
-I originally made this to create playlists while on my main PC for my Raspberry Pi 2, running Lakka.\
-*Since retroarch 1.8.2, there's now a manual scanner option built-in! [Read here](https://www.libretro.com/index.php/retroarch-1-8-2-released/)
+## The orignal project
+[retroarch-lakka-playlist-maker](https://github.com/parklez/retroarch-lakka-playlist-maker) by parklez
+## Why This fork?
+I needed a faster way to create playlists for a cheap tv box (MXQ PRO 4k - Amlogic S805) running lakka 4.4 so I converted the original project from python 3 to python 2 and added a modified script to create playlists by just passing parameters to the python function. 
 
 ## Requirements 🐍
-- Python 3
-- Some programming knowledge
 
-## Download ⚡
-- [Download this repository](https://github.com/parklez/retroarch-lakka-playlist-maker/archive/master.zip)
-- Edit the end of `create_playlists.py` or import this as a module in your own python program.
+- Python 2
 
-Keep this project @ the same folder as your ROMs, that way you can double-click to update your playlists. 💡
+- Some programming and linux knowledge
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/parklez/retroarch-lakka-playlist-maker/master/img/explorer.png">
-</p>
+  
 
-## Documentation 📝
-For most cases use `Playlist` class:
-```python
-Playlist(name='System Name', # Must follow this: https://github.com/libretro/retroarch-assets/tree/master/xmb/automatic/png
-         source='path/to/your/rom/',
-         output='path/to/Retroarch/playlist/',
-         filters=['cue', 'iso'], # Limits to specific file types, defaults to []
-         core='path/to/core', # Defaults ''
-         search_recuversively=False, # Scans for files within dirs
-         rpi=False) # Changes output directory in case script is being run from another computer
+## Download & Setup⚡
+
+ 1. Ssh into your lakka tv box and go to the storage root:
+
+```bash
+    cd /storage/
 ```
-
-For Arcade (MAME/FBNeo) games:
-```python
-Arcade(*args, # Same arguments as Playlist.
-       dat_file='path/to/dat') # 'Mame 0.233 - Split.dat' or 'FBNeo - Arcade Games.dat' 
+ 2. Next download this repository
+```bash
+    wget https://github.com/kiarov/retroarch-lakka-playlist-maker/archive/refs/heads/master.zip
+```
+3. unzip everything
+ ```bash
+  unzip master.zip
+```
+4. Copy the two scripts to the root of the storage
+ ```bash
+  cp /storage/retroarch-lakka-playlist-maker-master/create_arcade_playlist.py /storage/ && cp /storage/retroarch-lakka-playlist-maker-master/create_playlist.py /storage/
 ```
 
 ## Examples of use 🐕‍🦺
-Open `create_playlists.py` and add a new line for each system/playlist you want to create following the examples given:
 
-```python
-RETROARCH_PLAYLIST_PATH = r'C:\Users\Andreas\Desktop\RetroArch\playlists'
+You need to name your target roms folder the same as your libreelec db file i.e:
 
-Playlist('Nintendo - Super Nintendo Entertainment System', r'G:\Games\_Lakka\Nintendo - Super Nintendo Entertainment System', RETROARCH_PLAYLIST_PATH)
-Arcade('MAME', r'G:\Games\Arcade - MAME', RETROARCH_PLAYLIST_PATH)
-Arcade('FBNeo - Arcade Games', r'G:\Games\_Lakka\Arcade - Final Burn Alpha', RETROARCH_PLAYLIST_PATH, dat_file='FBNeo - Arcade Games.dat')
-Playlist('Sony - PlayStation', r'G:\Games\Sony - PlayStation 1', RETROARCH_PLAYLIST_PATH, ['iso', 'cue'], search_recursively=True)
-```
+> ~/roms/genesis/{files}
+> ~/genesis.db
+
+### create_playlist.py usage
+
+The script receives 2 parameters **{playlist name}** and **{db file name / target folder}**
+Being the first the name you'll se in your playlists inside retroarch and the second the name of the db file and the folder containing the roms inside ~/roms folder.
+
+   ```bash
+    python create_playlist.py "Sega - Genesis" genesis
+   ```
+
+If you had no errors, you now should see a file named **Sega - Genesis.lpl** inside your ~/playlists folder containing all the found games.
+### create_arcade_playlist.py usage
+This one receives no parameters and expects that you already have a file named **FBneo.dat** at the root of your /storage/ folder and a **fbneo** folder inside ~/roms. 
+For more information about this script I suggest you read parkles's original [documentation](https://github.com/parklez/retroarch-lakka-playlist-maker?tab=readme-ov-file#documentation-).
+
+
+### Thanks
+Thank you parkles for your original code in which this project is heavily based.
